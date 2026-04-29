@@ -8,7 +8,7 @@
     
     <!-- PWA Essential -->
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#1a1a1a">
+    <meta name="theme-color" content="#d4af37">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="MYBY">
@@ -384,6 +384,51 @@
             line-height: 1.8;
         }
 
+        /* زر التثبيت العربي */
+        #installBanner {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #d4af37, #f1c40f);
+            color: #0a0a0a;
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(212,175,55,0.4);
+            z-index: 9999;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 700;
+            align-items: center;
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        #installBtn {
+            background: #0a0a0a;
+            color: #d4af37;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            font-family: 'Cairo', sans-serif;
+            margin-right: 12px;
+        }
+
+        #closeInstall {
+            background: transparent;
+            border: none;
+            color: #0a0a0a;
+            font-size: 24px;
+            cursor: pointer;
+            margin-left: 8px;
+            line-height: 1;
+        }
+
         /* توافق مع الجوال */
         @media (max-width: 768px) {
             h1 { font-size: 2.2rem; }
@@ -396,6 +441,7 @@
             .contact-buttons { flex-direction: column; align-items: center; }
             .btn { width: 90%; max-width: 320px; }
             .logo-container img { max-width: 200px; }
+            #installBanner { right: 10px; left: 10px; bottom: 10px; }
         }
     </style>
 </head>
@@ -471,7 +517,7 @@
         <h2>تابعنا للجديد</h2>
         <p>سجل اهتمامك وكن أول من يعرف عند إطلاق خدماتنا</p>
         <div class="contact-buttons">
-            <a href="https://wa.me/447000000000" class="btn btn-gold">تواصل واتساب</a>
+            <a href="https://wa.me/447595709649" class="btn btn-gold">تواصل واتساب</a>
             <a href="mailto:info@mybyltd.co.uk" class="btn btn-outline">راسلنا بالإيميل</a>
             <a href="https://www.facebook.com/mybyltd" class="btn btn-outline">صفحة الفيسبوك</a>
         </div>
@@ -490,6 +536,13 @@
         </div>
     </footer>
 
+    <!-- زر تثبيت التطبيق بالعربي -->
+    <div id="installBanner">
+        <span>ثبّت تطبيق عالم ماي باي</span>
+        <button id="installBtn">تثبيت</button>
+        <button id="closeInstall">×</button>
+    </div>
+
     <!-- PWA Service Worker Registration -->
     <script>
       if ('serviceWorker' in navigator) {
@@ -499,6 +552,29 @@
             .catch(err => console.log(`Service Worker: Error: ${err}`));
         });
       }
+
+      // زر التثبيت العربي
+      let deferredPrompt;
+      const installBanner = document.getElementById('installBanner');
+      const installBtn = document.getElementById('installBtn');
+      const closeInstall = document.getElementById('closeInstall');
+
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        installBanner.style.display = 'flex';
+      });
+
+      installBtn.addEventListener('click', async () => {
+        installBanner.style.display = 'none';
+        deferredPrompt.prompt();
+        await deferredPrompt.userChoice;
+        deferredPrompt = null;
+      });
+
+      closeInstall.addEventListener('click', () => {
+        installBanner.style.display = 'none';
+      });
     </script>
 
 </body>
